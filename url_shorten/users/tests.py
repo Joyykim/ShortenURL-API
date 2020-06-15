@@ -1,4 +1,3 @@
-from django.test import TestCase
 from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -15,4 +14,3 @@ class UserTestCase(APITestCase):
         }
         response = self.client.post('/api/users', data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
