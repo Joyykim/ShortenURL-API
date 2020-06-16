@@ -26,5 +26,5 @@ class ShortenerViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         result = super().create(request, *args, **kwargs)
-        short_url = request.build_absolute_uri(result.data)
+        short_url = request.build_absolute_uri(result.data['shortURL'])
         return Response({"short_url": short_url})
