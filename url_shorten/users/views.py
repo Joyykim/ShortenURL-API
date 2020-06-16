@@ -30,15 +30,10 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             request.user.auth_token.delete()
         except (AttributeError, ObjectDoesNotExist):
-            return Response({"detail": "fail logout."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "failed logout."}, status=status.HTTP_404_NOT_FOUND)
 
         response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
         return response
-
-    # 탈퇴 - 비활성화
-    @action(detail=False)
-    def deactivate(self, request, *args, **kwargs):
-        return super().destroy(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
