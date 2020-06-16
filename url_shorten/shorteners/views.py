@@ -13,7 +13,7 @@ class ShortenerViewSet(viewsets.ModelViewSet):
     queryset = Link.objects.all()
     serializer_class = ShotenerSerializer
 
-    @action()
+    @action(detail=False)
     def link(request, id):
         db_id = Link.deocde_id(id)
         link_db = get_object_or_404(Link, id=db_id)
