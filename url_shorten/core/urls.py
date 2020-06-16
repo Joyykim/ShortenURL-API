@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -8,9 +9,9 @@ from users.views import UserViewSet
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'users', UserViewSet)
-# router.register(r'shorteners', ShortenerViewSet)
+router.register(r'shorteners', ShortenerViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path(r'login/', obtain_auth_token),
+    path('login', obtain_auth_token),
 ]
