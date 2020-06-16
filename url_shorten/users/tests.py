@@ -60,3 +60,6 @@ class UserTestCase(APITestCase):
 
     def test_update_password(self):
         pass
+
+    def test_update_username(self):
+        pass
