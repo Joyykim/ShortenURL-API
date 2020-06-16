@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'core',
     'shorteners',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -92,8 +93,14 @@ DATABASES = {
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['DB_PASSWORD'],
         'PORT': os.environ['DB_PORT'],
+        # 'TEST': {
+        #     'NAME': 'test_url-shorten',
+        # },
     }
 }
+
+AUTH_USER_MODEL = 'users.User'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
