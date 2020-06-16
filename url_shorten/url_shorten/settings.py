@@ -93,6 +93,9 @@ DATABASES = {
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['DB_PASSWORD'],
         'PORT': os.environ['DB_PORT'],
+        # 'TEST': {
+        #     'NAME': 'test_url-shorten',
+        # },
     }
 }
 
