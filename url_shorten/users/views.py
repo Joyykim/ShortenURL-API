@@ -29,4 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return [AllowAny()]
 
-    # 회원가입
+    # 탈퇴 - 비활성화
+    @action(detail=False)
+    def deactivate(self):
+        pass

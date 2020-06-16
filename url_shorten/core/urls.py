@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework.authtoken import views
@@ -12,5 +13,5 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path(r'login/', obtain_auth_token),
+    path('login', obtain_auth_token),
 ]
