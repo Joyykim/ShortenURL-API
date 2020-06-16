@@ -57,9 +57,3 @@ class UserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], data['username'])
         self.assertNotEqual(response.data['username'], prev_data.username)
-
-    def test_update_password(self):
-        pass
-
-    def test_update_username(self):
-        pass
