@@ -9,7 +9,7 @@ from users.views import UserViewSet
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'users', UserViewSet)
-router.register(r'shorteners', ShortenerViewSet)
+router.register(r'url', ShortenerViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
