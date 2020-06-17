@@ -1,6 +1,7 @@
-from django.db import models
-import time
 import string
+import time
+
+from django.db import models
 
 words = string.ascii_letters + string.digits
 
@@ -11,30 +12,29 @@ class Link(models.Model):
     hits = models.IntegerField(default=0)
     owner = models.ForeignKey('users.User', related_name='links', on_delete=models.CASCADE)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        a = int(time.time())
-        print(a)
-        super().save(force_insert, force_update, using, update_fields)
+    # owner = models.ForeignKey('users.User', related_name='links', on_delete=models.CASCADE)
 
-    # def get_shortURL(self, obj):
-    #     # short_url = f"http:8000//127.0.0.1/api/link/{obj.shortURL}"
-    #     request = self.context['request']
-    #     short_url = f"{request.scheme}://{request.get_host()}/api/link/{obj.shortURL}"
-    #     return short_url
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.shortURL = self.long_to_short()
+        super().save(force_insert, force_update, using, update_fields)
 
     @property
     def shortURL(self):
-        request = self
         # short_url = f"{request.scheme}://{request.get_host()}/api/link/{self._shortURL}"
-        short_url = f"http://127.0.0.1/api/link/{self._shortURL}"
-        return short_url
+        return f"http://127.0.0.1:8000/api/link/{self._shortURL}"
+
+    @shortURL.setter
+    def shortURL(self, val):
+        self._shortURL = val
 
     def long_to_short(self):
         result = 0
         for s in self.realURL:
             result += ord(s)
+        for s in self.owner.username:
+            result += ord(s)
         result += int(time.time())
-        return result
+        return self.base62(result)
 
     def base62(self, index):
         result = ""
