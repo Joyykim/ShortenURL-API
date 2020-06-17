@@ -17,8 +17,15 @@ class LinkSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         link = super().create(validated_data)
         encoded = self.base62(link.id)
-        validated_data['shortURL'] = encoded
-        return self.update(link, validated_data)
+        link.shortURL = encoded
+        link.save()
+        return link
+
+    def get_shortURL(self, obj):
+        # short_url = f"http:8000//127.0.0.1/api/link/{obj.shortURL}"
+        request = self.context['request']
+        short_url = f"{request.scheme}://{request.get_host()}/api/link/{obj.shortURL}"
+        return short_url
 
     def base62(self, index):
         result = ""
@@ -26,8 +33,3 @@ class LinkSerializer(serializers.ModelSerializer):
             index, i = divmod(index, 62)
             result += words[i]
         return result
-
-    def get_shortURL(self, obj):
-        short_url = f"http:8000//127.0.0.1/api/link/{obj.shortURL}"
-        # short_url = f"{request.scheme}://{request.get_host()}{request.path}/{result.data['shortURL']}"
-        return short_url
