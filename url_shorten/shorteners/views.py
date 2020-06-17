@@ -38,7 +38,7 @@ class ShortenerViewSet(viewsets.ModelViewSet):
         단축 url 생성
         """
         result = super().create(request, *args, **kwargs)
-        short_url = f"{request.scheme}://{request.get_host()}{request.path}/{result.data['shortURL']}"
+        short_url = f"{request.scheme}://{request.get_host()}/link/{result.data['shortURL']}"
         return Response({"short_url": short_url})
 
 
