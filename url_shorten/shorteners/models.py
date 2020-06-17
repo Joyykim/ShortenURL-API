@@ -3,13 +3,8 @@ from django.db import models
 
 class Link(models.Model):
     realURL = models.URLField()
-    shortURL = models.URLField()
+    shortURL = models.CharField(max_length=200)
     hits = models.IntegerField(default=0)
 
     def __repr__(self):
-        return "<Link (Hits %s): %s>" % (self.hits, self.realURL)
-
-# from shorteners.models import Link
-# # Link.objects.create(realURL='https://www.naver.com/')
-# # link = Link.objects.get(pk=1)
-# # short = link.get_short_id()
+        return f"<Link (Hits {self.hits}): {self.realURL}>"
