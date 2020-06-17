@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import render, resolve_url
 from django.urls import reverse
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -28,7 +28,7 @@ class ShortenerViewSet(viewsets.ModelViewSet):
         result = super().create(request, *args, **kwargs)
         # short_url = f"{request.scheme}://{request.get_host()}/link/{result.data['shortURL']}"
         # return Response({"short_url": short_url})
-        return Response({'shortURL': result.data['shortURL']})
+        return Response({'shortURL': result.data['shortURL']}, status=status.HTTP_201_CREATED)
 
 
 class LinkViewSet(mixins.RetrieveModelMixin,
