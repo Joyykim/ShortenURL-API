@@ -8,7 +8,6 @@ words = string.ascii_letters + string.digits
 
 class LinkSerializer(serializers.ModelSerializer):
     shortURL = serializers.SerializerMethodField()
-    # owner =
 
     class Meta:
         model = Link
