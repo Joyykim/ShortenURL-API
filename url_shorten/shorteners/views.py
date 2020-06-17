@@ -30,6 +30,9 @@ class ShortenerViewSet(viewsets.ModelViewSet):
         # return Response({"short_url": short_url})
         return Response({'shortURL': result.data['shortURL']}, status=status.HTTP_201_CREATED)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class LinkViewSet(mixins.RetrieveModelMixin,
                   viewsets.GenericViewSet):

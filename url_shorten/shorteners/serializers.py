@@ -8,11 +8,13 @@ words = string.ascii_letters + string.digits
 
 class LinkSerializer(serializers.ModelSerializer):
     shortURL = serializers.SerializerMethodField()
+    # owner =
 
     class Meta:
         model = Link
-        fields = ('realURL', 'shortURL', 'hits')
-        read_only_fields = ('shortURL',)
+        fields = ('realURL', 'shortURL', 'hits', 'owner')
+        read_only_fields = ('shortURL', 'owner')
+        # extra_kwargs = {'owner': {'write_only': True}}
 
     def create(self, validated_data):
         link = super().create(validated_data)
