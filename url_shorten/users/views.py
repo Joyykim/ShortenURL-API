@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return super().get_permissions()
 
-    @action(methods=('post',), detail=False)
+    @action(methods='post', detail=False)
     def login(self, request):
         serializer = AuthTokenSerializer(data=request.data,
                                          context={'request': request})

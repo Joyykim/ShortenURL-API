@@ -51,7 +51,7 @@ class ShortenerViewSet(mixins.CreateModelMixin,
         elif self.request.user.is_membership:
             return queryset.filter(owner=self.request.user)
         else:
-            return queryset.filter(owner=self.request.user)[20:]
+            return queryset.filter(owner=self.request.user)
 
 
 class LinkViewSet(mixins.RetrieveModelMixin,

@@ -37,21 +37,3 @@ class Link(models.Model):
             index, i = divmod(index, 62)
             result += words[i]
         return result
-
-
-class PollManager(models.Manager):
-
-    def get(self, *args, **kwargs):
-        return super().get(*args, **kwargs)
-
-
-class OpinionPoll(models.Model):
-    question = models.CharField(max_length=200)
-    poll_date = models.DateField()
-    objects = PollManager()
-
-
-class Response(models.Model):
-    poll = models.ForeignKey(OpinionPoll, on_delete=models.CASCADE)
-    person_name = models.CharField(max_length=50)
-    response = models.TextField()
