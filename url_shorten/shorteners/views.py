@@ -13,18 +13,24 @@ words = string.ascii_letters + string.digits
 
 
 class ShortenerViewSet(mixins.CreateModelMixin,
+                       mixins.ListModelMixin,
                        viewsets.GenericViewSet):
     queryset = Link.objects.all()
     serializer_class = LinkSerializer
-    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return super().get_permissions()
 
     def get_throttles(self):
-        if self.request.user.is_anonymous:
-            return [throttles.AnonThrottle()]
-        elif self.request.user.is_membership:
-            return [throttles.MembershipThrottle()]
-        else:
-            return [throttles.UserThrottle()]
+        if self.action == 'create':
+            if self.request.user.is_anonymous:
+                return [throttles.AnonThrottle()]
+            elif self.request.user.is_membership:
+                return [throttles.MembershipThrottle()]
+            else:
+                return [throttles.UserThrottle()]
 
     def create(self, request, *args, **kwargs):
         """단축 url 생성"""
@@ -36,6 +42,9 @@ class ShortenerViewSet(mixins.CreateModelMixin,
             serializer.save()
         else:
             serializer.save(owner=self.request.user)
+
+    def filter_queryset(self, queryset):
+        return queryset.filter(owner=self.request.user)
 
 
 class LinkViewSet(mixins.RetrieveModelMixin,
