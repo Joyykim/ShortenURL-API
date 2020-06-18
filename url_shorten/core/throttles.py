@@ -2,12 +2,12 @@ from rest_framework import throttling
 
 
 class MembershipThrottle(throttling.UserRateThrottle):
-    rate = '6/m'
+    rate = '60/m'
 
 
 class UserThrottle(throttling.UserRateThrottle):
-    rate = '4/m'
+    rate = '20/m'
 
 
 class AnonThrottle(throttling.AnonRateThrottle):
-    rate = '2/m'
+    rate = '10/m'

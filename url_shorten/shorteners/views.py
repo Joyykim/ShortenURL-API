@@ -31,6 +31,8 @@ class ShortenerViewSet(mixins.CreateModelMixin,
                 return [throttles.MembershipThrottle()]
             else:
                 return [throttles.UserThrottle()]
+        else:
+            return super().get_throttles()
 
     def create(self, request, *args, **kwargs):
         """단축 url 생성"""
@@ -44,7 +46,12 @@ class ShortenerViewSet(mixins.CreateModelMixin,
             serializer.save(owner=self.request.user)
 
     def filter_queryset(self, queryset):
-        return queryset.filter(owner=self.request.user)
+        if self.request.user.is_anonymous:
+            return queryset.filter(pk=-1)
+        elif self.request.user.is_membership:
+            return queryset.filter(owner=self.request.user)
+        else:
+            return queryset.filter(owner=self.request.user)[20:]
 
 
 class LinkViewSet(mixins.RetrieveModelMixin,
