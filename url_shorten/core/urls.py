@@ -14,5 +14,4 @@ router.register(r'link', LinkViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('login', obtain_auth_token),
 ]
