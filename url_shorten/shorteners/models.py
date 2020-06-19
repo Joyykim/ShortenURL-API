@@ -8,12 +8,16 @@ words = string.ascii_letters + string.digits
 
 class Link(models.Model):
     realURL = models.URLField()
-    _shortURL = models.CharField(max_length=200)
+    _shortURL = models.CharField(max_length=200, unique=True)
     hits = models.IntegerField(default=0)
     owner = models.ForeignKey('users.User', related_name='links', on_delete=models.CASCADE, null=True)
+    is_custom = models.BooleanField(default=False)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.shortURL = self.long_to_short()
+        if self.is_custom:
+            self.shortURL = self.long_to_short()
+        else:
+            self.shortURL = self.long_to_short()
         super().save(force_insert, force_update, using, update_fields)
 
     @property

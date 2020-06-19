@@ -22,12 +22,15 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ('create', 'login'):
             return [AllowAny()]
+        elif self.name == 'Login':
+            return [AllowAny()]
+
         if self.action == 'deactivate':
             return [IsUserSelf()]
 
         return super().get_permissions()
 
-    @action(methods='post', detail=False)
+    @action(methods=('post',), detail=False)
     def login(self, request):
         serializer = AuthTokenSerializer(data=request.data,
                                          context={'request': request})
@@ -41,7 +44,7 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             request.user.auth_token.delete()
         except (AttributeError, ObjectDoesNotExist):
-            return Response({"detail": "failed logout."}, status=status.HTTP_404_NOT_FOUND)
+            pass
 
         response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
         return response
