@@ -19,6 +19,12 @@ class ShortenerViewSet(mixins.CreateModelMixin,
     queryset = Link.objects.all()
     serializer_class = LinkSerializer
 
+    # def get_serializer_class(self):
+    #     if self.action == 'create':
+    #         return LinkSingleS
+    #
+    #     return self.serializer_class
+
     # @action(methods=('post',), detail=False)
     # def custom(self, request, *args, **kwargs):
     #     result = super().create(request, *args, **kwargs)

@@ -11,8 +11,8 @@ class UrlTestCase(APITestCase):
     """
 
     def setUp(self) -> None:
-        user = baker.make('users.User')
-        self.client.force_authenticate(user=user)
+        self.user = baker.make('users.User')
+        self.client.force_authenticate(user=self.user)
         self.urlData = {'realURL': 'https://www.naver.com/'}
 
     def test_shortenURL(self):
@@ -39,4 +39,24 @@ class UrlTestCase(APITestCase):
         pass
 
     def test_custom(self):
-        pass
+        user = baker.make('users.User', is_membership=True)
+        self.client.force_authenticate(user=user)
+        url_data = {'realURL': 'https://www.naver.com/', 'custom': 'cucucu', 'is_custom': True}
+        response = self.client.post('http://127.0.0.1:8000/api/url', data=url_data)
+        response_url = response.data['shortURL'].split('/')[-1]
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response_url, url_data['custom'])
+
+    def test_custom_duplicated(self):
+        link = baker.make(Link, realURL='https://www.naver.com/', _shortURL='cucu', is_custom=True)
+        url_data = {'realURL': 'https://www.naver.com/', 'custom': 'cucu', 'is_custom': True}
+        response = self.client.post('http://127.0.0.1:8000/api/url', data=url_data)
+        for i in Link.objects.all():
+            print(i.shortURL)
+
+        response_url = response.data['shortURL'].split('/')[-1]
+        print(response_url)
+        self.assertEqual(response_url, url_data['custom'])
+
+        self.fail()

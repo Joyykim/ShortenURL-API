@@ -1,7 +1,8 @@
 import string
 import time
 
-from django.db import models
+import psycopg2
+from django.db import models, IntegrityError
 
 words = string.ascii_letters + string.digits
 
@@ -11,29 +12,27 @@ class Link(models.Model):
     _shortURL = models.CharField(max_length=200, unique=True)
     hits = models.IntegerField(default=0)
     owner = models.ForeignKey('users.User', related_name='links', on_delete=models.CASCADE, null=True)
+    # custom = models.CharField(max_length=20, null=True)
     is_custom = models.BooleanField(default=False)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.is_custom:
-            self.shortURL = self.long_to_short()
-        else:
-            self.shortURL = self.long_to_short()
+        if not self.is_custom:
+            self._shortURL = self.long_to_short()
+        # else:
+        #     self.shortURL = self.custom
         super().save(force_insert, force_update, using, update_fields)
 
     @property
     def shortURL(self):
         return f"http://127.0.0.1:8000/api/link/{self._shortURL}"
 
-    @shortURL.setter
-    def shortURL(self, val):
-        self._shortURL = val
-
     def long_to_short(self):
         result = 0
         for s in self.realURL:
             result += ord(s)
-        result += int(time.time() * 1000)
-        return self.base62(result)
+        result = str(result) + str(int(time.time() * 1000))
+        print(result)
+        return self.base62(int(result))
 
     def base62(self, index):
         result = ""

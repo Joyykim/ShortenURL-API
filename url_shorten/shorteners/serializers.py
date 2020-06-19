@@ -11,6 +11,9 @@ class LinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Link
-        fields = ('realURL', 'shortURL', 'hits', 'owner')
+        fields = ('realURL', 'shortURL', 'hits', 'owner', 'is_custom')
         read_only_fields = ('shortURL', 'owner')
-        # extra_kwargs = {'owner': {'write_only': True}}
+        extra_kwargs = {
+            # 'custom': {'write_only': True},
+            'is_custom': {'write_only': True},
+        }
