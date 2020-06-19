@@ -2,6 +2,7 @@ import string
 
 from django.http import HttpResponsePermanentRedirect
 from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
@@ -17,6 +18,10 @@ class ShortenerViewSet(mixins.CreateModelMixin,
                        viewsets.GenericViewSet):
     queryset = Link.objects.all()
     serializer_class = LinkSerializer
+
+    # @action(methods=('post',), detail=False)
+    # def custom(self, request, *args, **kwargs):
+    #     result = super().create(request, *args, **kwargs)
 
     def get_permissions(self):
         if self.action == 'create':
