@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from model_bakery import baker
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, CoreAPIClient
 
 # User = get_user_model()
@@ -9,32 +10,28 @@ from users.models import User
 
 class UserTestCase(APITestCase):
     def setUp(self) -> None:
-        """유저 5개 생성"""
-        for i in range(1, 6):
-            data = {'username': f'user{i}', 'password': '1111'}
-            self.client.post('/api/users', data=data)
-
-        self.data = {'username': 'user1', 'password': '1111'}
-        self.user = User.objects.first()
+        self.user = baker.make('users.User', password='1111', username='user')
+        self.data = {'username': self.user.username, 'password': '1111'}
 
     def test_register(self):
         """회원가입"""
-        data = {'username': 'user', 'password': '1111'}
+        data = {'username': 'user1', 'password': '1111'}
         response = self.client.post('/api/users', data=data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_login(self):
         """로그인"""
-        response = self.client.post('/api/login', data=self.data)
+        response = self.client.post('/api/users/login', data=self.data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.data['token'])
 
     def test_logout(self):
         """로그아웃"""
-        response = self.client.post('/api/login', data=self.data)
-        self.client.force_authenticate(user=self.user, token=response.data['token'])
+        token = baker.make(Token, user=self.user)
+        token = Token.objects.get(user_id=self.user.id)
+        self.client.force_authenticate(user=self.user, token=token.key)
         response = self.client.get('/api/users/logout')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -4,6 +4,12 @@ from rest_framework.test import APITestCase
 
 
 class UrlTestCase(APITestCase):
+    """
+    URL 히스토리(list - 자신의 히스토리만)
+    멤버쉽 쓰로틀링
+    커스텀 URL
+    """
+
     def setUp(self) -> None:
         user = baker.make('users.User')
         self.client.force_authenticate(user=user)
@@ -23,3 +29,6 @@ class UrlTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_301_MOVED_PERMANENTLY)
         self.assertEqual(response.url, self.urlData['realURL'])
+
+    def test_(self):
+        pass
