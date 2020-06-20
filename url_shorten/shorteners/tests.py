@@ -59,4 +59,5 @@ class UrlTestCase(APITestCase):
         print(response_url)
         self.assertEqual(response_url, url_data['custom'])
 
+
         self.fail()
