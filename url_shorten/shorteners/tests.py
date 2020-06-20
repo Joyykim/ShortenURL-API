@@ -18,7 +18,7 @@ class UrlTestCase(APITestCase):
     def test_shortenURL(self):
         """단축 URL 생성"""
         response = self.client.post('http://127.0.0.1:8000/api/url', data=self.urlData)
-
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertNotEqual(response.data['shortURL'], self.urlData['realURL'])
 
@@ -35,10 +35,8 @@ class UrlTestCase(APITestCase):
         link = Link.objects.get(realURL=self.urlData['realURL'])
         self.assertEqual(link.hits, 1)
 
-    def test_throttle(self):
-        pass
-
     def test_custom(self):
+        """커스텀 url 생성"""
         user = baker.make('users.User', is_membership=True)
         self.client.force_authenticate(user=user)
         url_data = {'realURL': 'https://www.naver.com/', 'custom': 'cucucu', 'is_custom': True}
@@ -49,6 +47,7 @@ class UrlTestCase(APITestCase):
         self.assertEqual(response_url, url_data['custom'])
 
     def test_custom_duplicated(self):
+        """커스텀 url 중복시 사용자에게 재입력 요구"""
         link = baker.make(Link, realURL='https://www.naver.com/', _shortURL='cucu', is_custom=True)
         url_data = {'realURL': 'https://www.naver.com/', 'custom': 'cucu', 'is_custom': True}
         response = self.client.post('http://127.0.0.1:8000/api/url', data=url_data)
@@ -59,5 +58,7 @@ class UrlTestCase(APITestCase):
         print(response_url)
         self.assertEqual(response_url, url_data['custom'])
 
-
         self.fail()
+
+    def test_throttle(self):
+        pass
