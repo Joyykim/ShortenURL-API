@@ -24,12 +24,6 @@ class CreateLinkSerializer(serializers.ModelSerializer):
         read_only_fields = ('shortURL',)
         # extra_kwargs = {}
 
-    def run_validation(self, data=empty):
-        return super().run_validation(data)
-
-    def is_valid(self, raise_exception=False):
-        return super().is_valid(raise_exception)
-
     def create(self, validated_data):
         """custom 검증 후"""
         if validated_data.get('is_custom'):

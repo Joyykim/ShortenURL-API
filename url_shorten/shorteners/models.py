@@ -25,6 +25,10 @@ class Link(models.Model):
     def shortURL(self):
         return f"http://127.0.0.1:8000/api/link/{self._shortURL}"
 
+    @shortURL.setter
+    def shortURL(self, val):
+        self._shortURL = val
+
     def make_short_uuid(self):
         u = uuid.uuid4()[:6]
         print(u)
