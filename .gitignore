@@ -112,8 +112,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-/venv
-
+#/venv
+docker
 # Spyder project settings
 .spyderproject
 .spyproject
