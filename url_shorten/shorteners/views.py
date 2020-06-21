@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from core import throttles
 from shorteners.models import Link
-from shorteners.serializers import LinkSerializer
+from shorteners.serializers import GetLinkSerializer, CreateLinkSerializer
 
 words = string.ascii_letters + string.digits
 
@@ -17,11 +17,7 @@ class ShortenerViewSet(mixins.CreateModelMixin,
                        mixins.ListModelMixin,
                        viewsets.GenericViewSet):
     queryset = Link.objects.all()
-    serializer_class = LinkSerializer
-
-    # @action(methods=('post',), detail=False)
-    # def custom(self, request, *args, **kwargs):
-    #     result = super().create(request, *args, **kwargs)
+    serializer_class = CreateLinkSerializer
 
     def get_permissions(self):
         if self.action == 'create':
@@ -40,9 +36,8 @@ class ShortenerViewSet(mixins.CreateModelMixin,
             return super().get_throttles()
 
     def create(self, request, *args, **kwargs):
-        """단축 url 생성"""
-        result = super().create(request, *args, **kwargs)
-        return Response({'shortURL': result.data['shortURL']}, status=status.HTTP_201_CREATED)
+        return super().create(request, *args, **kwargs)
+        # return Response({'shortURL': result.data['shortURL']}, status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
         if self.request.user.is_anonymous:
@@ -62,7 +57,7 @@ class ShortenerViewSet(mixins.CreateModelMixin,
 class LinkViewSet(mixins.RetrieveModelMixin,
                   viewsets.GenericViewSet):
     queryset = Link.objects.all()
-    serializer_class = LinkSerializer
+    serializer_class = GetLinkSerializer
     lookup_field = '_shortURL'
     permission_classes = [AllowAny]
 
