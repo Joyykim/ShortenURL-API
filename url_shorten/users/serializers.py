@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from rest_framework.throttling import AnonRateThrottle
 
-from shorteners.serializers import LinkSerializer
+from shorteners.serializers import GetLinkSerializer
 from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    links = LinkSerializer(many=True, read_only=True)
+    links = GetLinkSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
