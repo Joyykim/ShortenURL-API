@@ -1,6 +1,6 @@
 import string
 import time
-import uuid
+from uuid import uuid4
 
 import psycopg2
 from django.db import models, IntegrityError
@@ -13,12 +13,11 @@ class Link(models.Model):
     _shortURL = models.CharField(max_length=200, unique=True)
     hits = models.IntegerField(default=0)
     owner = models.ForeignKey('users.User', related_name='links', on_delete=models.CASCADE, null=True)
-    # custom = models.CharField(max_length=20, null=True)
     is_custom = models.BooleanField(default=False)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if not self.is_custom:
-            self._shortURL = self.make_short_base62()
+        if (not self.hits) and (not self.is_custom):
+            self.shortURL = self.make_short_uuid()
         super().save(force_insert, force_update, using, update_fields)
 
     @property
@@ -30,20 +29,8 @@ class Link(models.Model):
         self._shortURL = val
 
     def make_short_uuid(self):
-        u = uuid.uuid4()[:6]
-        print(u)
-        pass
-
-    def make_short_base62(self):
-        result = 0
-        for s in self.realURL:
-            result += ord(s)
-        result = str(result) + str(int(time.time() * 1000))
-        return self.base62(int(result))
-
-    def base62(self, index):
-        result = ""
-        while (index % 62) > 0 or result == "":
-            index, i = divmod(index, 62)
-            result += words[i]
-        return result
+        """20번 모두 uuid 중복 발생 시"""
+        for i in range(20):
+            u = uuid4().hex[:6]
+            if not Link.objects.filter(_shortURL=u).exists():
+                return u
